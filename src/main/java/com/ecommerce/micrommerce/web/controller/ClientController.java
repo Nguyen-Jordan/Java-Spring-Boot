@@ -1,27 +1,54 @@
 package com.ecommerce.micrommerce.web.controller;
 
 import com.ecommerce.micrommerce.model.Client;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import com.ecommerce.micrommerce.web.dao.ClientDao;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.List;
 
+@Api("API pour les opérations CRUD sur les produits.")
 @RestController
+@RequestMapping("/clients")
 public class ClientController {
 
-    @GetMapping("/Clients")
-    public String showClients() {
-        return "Un exemple d'un client";
+    private final ClientDao clientDao;
+
+    public ClientController(ClientDao clientDao) {
+        this.clientDao = clientDao;
     }
 
-    @GetMapping("/Clients/{id}")
-    public Client showClient(@PathVariable int id) throws ParseException {
-        String dateOfTheBirth = "1989-04-16 +1200";
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd Z");
-        Client client = new Client(id, "Jordan", "Nguyen",sdf.parse(dateOfTheBirth),"13AA00002");
-        return client;
+    @ApiOperation(value = "Récupère tout les clients soit en stock!")
+    @GetMapping
+    public List<Client> clientList(){
+        return clientDao.findAll();
+    }
+
+    //Récupérer un produit par son Id
+    @ApiOperation(value = "Récupère un client grâce à son ID à condition que celui-ci soit existant!")
+    @GetMapping(value = "/{id}")
+    public Client showClient(@PathVariable int id) {
+        return clientDao.findById(id);
+    }
+
+    @ApiOperation(value = "Ajoute un client à la liste")
+    @PostMapping
+    public void addClient (@RequestBody Client client) {
+        clientDao.save(client);
+    }
+
+    @ApiOperation(value = "Modifie les données d'un client existant")
+    @PutMapping
+    public void modifyClient (String firstName, String lastName, String dateOfBirth, String drivingLicense) throws ParseException {
+
+    }
+
+    @ApiOperation(value = "Retire un client existant")
+    @DeleteMapping("/{id}")
+    public void deleteClient () {
+
     }
 }
