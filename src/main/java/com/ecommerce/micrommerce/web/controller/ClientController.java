@@ -4,11 +4,15 @@ import com.ecommerce.micrommerce.model.Client;
 import com.ecommerce.micrommerce.web.dao.ClientDao;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Objects;
 
 @Api("API pour les opérations CRUD sur les produits.")
 @RestController
@@ -36,8 +40,17 @@ public class ClientController {
 
     @ApiOperation(value = "Ajoute un client à la liste")
     @PostMapping
-    public void addClient (@RequestBody Client client) {
-        clientDao.save(client);
+    public ResponseEntity<Client> addClient (@RequestBody Client client) {
+        Client clientAdded = clientDao.save(client);
+        if (Objects.isNull(clientAdded)) {
+            return ResponseEntity.noContent().build();
+        }
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(clientAdded.getId())
+                .toUri();
+        return ResponseEntity.created(location).build();
     }
 
     @ApiOperation(value = "Modifie les données d'un client existant")
