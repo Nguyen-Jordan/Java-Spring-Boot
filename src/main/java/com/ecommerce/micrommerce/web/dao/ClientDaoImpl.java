@@ -49,4 +49,26 @@ public class ClientDaoImpl implements ClientDao{
         clients.add(client);
         return client;
     }
+
+    @Override
+    public Client modify(int id, Client client) {
+        Client clientToUpdate = findById(id);
+        if (clientToUpdate != null){
+            clientToUpdate.setFirstname(client.getFirstname());
+            clientToUpdate.setLastname(client.getLastname());
+            clientToUpdate.setBirthdate(client.getBirthdate());
+            clientToUpdate.setDrivingLicenseNumb(client.getDrivingLicenseNumb());
+        }
+        return clientToUpdate;
+    }
+
+
+    @Override
+    public Client delete(int id) {
+        Client clientToDelete = findById(id);
+        if (clientToDelete != null){
+            clients.remove(clientToDelete);
+        }
+        return clientToDelete;
+    }
 }

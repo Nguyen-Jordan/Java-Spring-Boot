@@ -8,4 +8,6 @@ public interface ClientDao {
     List<Client> findAll();
     Client findById(int id);
     Client save(Client client);
+    Client modify(int id, Client client);
+    Client delete(int id);
 }
