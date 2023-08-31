@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Date;
 
 // @JsonIgnoreProperties ignore une liste de propriété
@@ -11,9 +15,10 @@ import java.util.Date;
 
 // @JsonFilter declare un filtre et on declare un nom
 @JsonFilter("monFiltreDynamique")
-//@Entity
+@Entity
 public class Client {
-    //@Id
+    @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
     private int id;
     //@Size(min = 3, max = 15)
     private String firstname;

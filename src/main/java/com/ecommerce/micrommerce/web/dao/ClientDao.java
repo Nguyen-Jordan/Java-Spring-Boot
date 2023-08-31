@@ -1,13 +1,15 @@
 package com.ecommerce.micrommerce.web.dao;
 
 import com.ecommerce.micrommerce.model.Client;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface ClientDao {
+@Repository
+public interface ClientDao extends JpaRepository<Client, Integer> {
     List<Client> findAll();
     Client findById(int id);
     Client save(Client client);
-    Client modify(int id, Client client);
-    Client delete(int id);
+    void deleteById(Integer id);
 }

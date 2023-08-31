@@ -2,13 +2,13 @@ package com.ecommerce.micrommerce.web.controller;
 
 import com.ecommerce.micrommerce.model.Client;
 import com.ecommerce.micrommerce.web.dao.ClientDao;
-import com.ecommerce.micrommerce.web.exceptions.ClientNotFoundException;
 import com.ecommerce.micrommerce.web.exceptions.DrivingLicenseDoesntExistException;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
@@ -17,14 +17,15 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Api("API pour les opérations CRUD sur les produits.")
 @RestController
 @RequestMapping("/clients")
 public class ClientController {
 
+    @Autowired
     private final ClientDao clientDao;
     private RestOperations restTemplate = new RestTemplate();
 
@@ -32,22 +33,17 @@ public class ClientController {
         this.clientDao = clientDao;
     }
 
-    @ApiOperation(value = "Récupère tout les clients soit en stock!")
-    @GetMapping
+    @RequestMapping(method = RequestMethod.GET)
     public MappingJacksonValue clientList(){
-        List<Client> clients = clientDao.findAll();
+        Iterable<Client> clients = clientDao.findAll();
         return filterMapping(clients);
     }
 
     //Récupérer un produit par son Id
     @ApiOperation(value = "Récupère un client grâce à son ID à condition que celui-ci soit existant!")
     @GetMapping(value = "/{id}")
-    public MappingJacksonValue showClient(@PathVariable int id) {
-        Client findClient = clientDao.findById(id);
-        if (findClient == null) {
-            throw new ClientNotFoundException("Le client avec l'id " + id + " est INTROUVABLE.");
-        }
-        return filterMapping(findClient);
+    public Client showClient(@PathVariable int id) {
+        return clientDao.findById(id);
     }
 
     @ApiOperation(value = "Ajoute un client à la liste")
@@ -68,16 +64,15 @@ public class ClientController {
 
     @ApiOperation(value = "Modifie les données d'un client existant")
     @PutMapping("/{id}")
-    public MappingJacksonValue modifyClient (@PathVariable int id, @RequestBody Client client){
+    public void modifyClient (@RequestBody Client client){
         textException(client);
-        Client updatedClient = clientDao.modify(id, client);
-        return filterMapping(updatedClient);
+        clientDao.save(client);
     }
 
     @ApiOperation(value = "Retire un client existant")
     @DeleteMapping("/{id}")
-    public Client deleteClient (@PathVariable int id) {
-        return clientDao.delete(id);
+    public void deleteClient (@PathVariable int id) {
+        clientDao.deleteById(id);
     }
 
     public Boolean isValidDrivingLicense (String drivingLicenseNumb){
