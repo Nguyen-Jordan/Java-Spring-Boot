@@ -12,7 +12,7 @@ import java.util.Date;
 //@JsonIgnoreProperties(value = {"drivingLicenseNumb", "id"})
 
 // @JsonFilter declare un filtre et on declare un nom
-@JsonFilter("monFiltreDynamique")
+//@JsonFilter("monFiltreDynamique")
 @Entity
 public class Customer {
     @Id

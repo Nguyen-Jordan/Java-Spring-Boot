@@ -9,6 +9,9 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
@@ -79,7 +82,7 @@ public class ClientController {
     }
 
     public MappingJacksonValue filterMapping(Object client){
-        SimpleBeanPropertyFilter monFiltre = SimpleBeanPropertyFilter.serializeAllExcept("id");
+        SimpleBeanPropertyFilter monFiltre = SimpleBeanPropertyFilter.serializeAllExcept();
         FilterProvider listDeNosFiltres = new SimpleFilterProvider().addFilter("monFiltreDynamique", monFiltre);
         MappingJacksonValue clientsFiltres = new MappingJacksonValue(client);
         clientsFiltres.setFilters(listDeNosFiltres);
@@ -90,6 +93,17 @@ public class ClientController {
         String drivingLicenseNumb = customer.getLicenseId();
         if (!isValidDrivingLicense(drivingLicenseNumb)){
             throw new DrivingLicenseDoesntExistException("Le numéro de permis " + drivingLicenseNumb  +" enregistré est un permis de conduire volé. Nous avons contacté la police, agenouillez-vous et tourner le dos à la porte avec les mains derrière la tête. La police est en route. Merci d’utiliser nos services. N’oubliez pas de nous recommander! ");
+        }
+    }
+
+    @PostMapping("/root")
+    public void letsGo (@RequestBody Customer customer){
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        String url = "http://192.168.1.237:8080/customers";
+        for (int i= 0; i < 5550; i++){
+            HttpEntity<Customer> requestEntity = new HttpEntity<>(customer, headers);
+            restTemplate.postForEntity(url,requestEntity, Customer.class);
         }
     }
 }
