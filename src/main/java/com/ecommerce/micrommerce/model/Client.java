@@ -3,6 +3,7 @@ package com.ecommerce.micrommerce.model;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

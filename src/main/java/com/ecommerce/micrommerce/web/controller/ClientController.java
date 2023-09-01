@@ -63,7 +63,7 @@ public class ClientController {
     }
 
     @ApiOperation(value = "Modifie les données d'un client existant")
-    @PutMapping("/{id}")
+    @PutMapping
     public void modifyClient (@RequestBody Client client){
         textException(client);
         clientDao.save(client);
