@@ -1,9 +1,6 @@
 package com.ecommerce.micrommerce.model;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,33 +14,33 @@ import java.util.Date;
 // @JsonFilter declare un filtre et on declare un nom
 @JsonFilter("monFiltreDynamique")
 @Entity
-public class Client {
+public class Customer {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private int id;
     //@Size(min = 3, max = 15)
-    private String firstname;
+    private String firstName;
     //@Size(min = 3, max = 15)
-    private String lastname;
+    private String lastName;
     private Date birthdate;
 
     // information que nous ne souhaitons pas exposer
     //@JsonIgnore ignore la propriété
     //@JsonIgnore
-    private String drivingLicenseNumb;
+    private String licenseId;
 
     // constructeur par défaut
-    public Client(){
+    public Customer(){
 
     }
 
     // constructeur pour nos tests
-    public Client(int id, String firstname, String lastname, Date birthdate, String drivingLicenseNumb) {
+    public Customer(int id, String firstName, String lastName, Date birthdate, String licenseId) {
         this.id = id;
-        this.firstname = firstname;
-        this.lastname = lastname;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.birthdate = birthdate;
-        this.drivingLicenseNumb = drivingLicenseNumb;
+        this.licenseId = licenseId;
     }
 
     public int getId() {
@@ -54,20 +51,20 @@ public class Client {
         this.id = id;
     }
 
-    public String getFirstname() {
-        return firstname;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
+    public void setFirstName(String firstname) {
+        this.firstName = firstname;
     }
 
-    public String getLastname() {
-        return lastname;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
+    public void setLastName(String lastname) {
+        this.lastName = lastname;
     }
 
     public Date getBirthdate() {
@@ -78,22 +75,22 @@ public class Client {
         this.birthdate = birthdate;
     }
 
-    public String getDrivingLicenseNumb() {
-        return drivingLicenseNumb;
+    public String getLicenseId() {
+        return licenseId;
     }
 
-    public void setDrivingLicenseNumb(String drivingLicenseNumb) {
-        this.drivingLicenseNumb = drivingLicenseNumb;
+    public void setLicenseId(String drivingLicenseNumb) {
+        this.licenseId = drivingLicenseNumb;
     }
 
     @Override
     public String toString() {
         return "Client{" +
                 "id=" + id +
-                ", firstname='" + firstname + '\'' +
-                ", lastname='" + lastname + '\'' +
+                ", firstname='" + firstName + '\'' +
+                ", lastname='" + lastName + '\'' +
                 ", birthdate=" + birthdate +
-                ", drivingLicenseNumb='" + drivingLicenseNumb + '\'' +
+                ", drivingLicenseNumb='" + licenseId + '\'' +
                 '}';
     }
 

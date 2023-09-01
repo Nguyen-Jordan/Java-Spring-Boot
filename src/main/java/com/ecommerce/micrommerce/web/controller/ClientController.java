@@ -1,6 +1,6 @@
 package com.ecommerce.micrommerce.web.controller;
 
-import com.ecommerce.micrommerce.model.Client;
+import com.ecommerce.micrommerce.model.Customer;
 import com.ecommerce.micrommerce.web.dao.ClientDao;
 import com.ecommerce.micrommerce.web.exceptions.DrivingLicenseDoesntExistException;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
@@ -18,11 +18,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.Objects;
-import java.util.Optional;
 
 @Api("API pour les opérations CRUD sur les produits.")
 @RestController
-@RequestMapping("/clients")
+@RequestMapping("/customers")
 public class ClientController {
 
     @Autowired
@@ -35,38 +34,38 @@ public class ClientController {
 
     @RequestMapping(method = RequestMethod.GET)
     public MappingJacksonValue clientList(){
-        Iterable<Client> clients = clientDao.findAll();
+        Iterable<Customer> clients = clientDao.findAll();
         return filterMapping(clients);
     }
 
     //Récupérer un produit par son Id
     @ApiOperation(value = "Récupère un client grâce à son ID à condition que celui-ci soit existant!")
     @GetMapping(value = "/{id}")
-    public Client showClient(@PathVariable int id) {
+    public Customer showClient(@PathVariable int id) {
         return clientDao.findById(id);
     }
 
     @ApiOperation(value = "Ajoute un client à la liste")
     @PostMapping
-    public ResponseEntity<Client> addClient (@RequestBody Client client) {
-        textException(client);
-        Client clientAdded = clientDao.save(client);
-        if (Objects.isNull(clientAdded)) {
+    public ResponseEntity<Customer> addClient (@RequestBody Customer customer) {
+        textException(customer);
+        Customer customerAdded = clientDao.save(customer);
+        if (Objects.isNull(customerAdded)) {
             return ResponseEntity.noContent().build();
         }
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(clientAdded.getId())
+                .buildAndExpand(customerAdded.getId())
                 .toUri();
         return ResponseEntity.created(location).build();
     }
 
     @ApiOperation(value = "Modifie les données d'un client existant")
     @PutMapping
-    public void modifyClient (@RequestBody Client client){
-        textException(client);
-        clientDao.save(client);
+    public void modifyClient (@RequestBody Customer customer){
+        textException(customer);
+        clientDao.save(customer);
     }
 
     @ApiOperation(value = "Retire un client existant")
@@ -87,8 +86,8 @@ public class ClientController {
         return clientsFiltres;
     }
 
-    public void textException(Client client){
-        String drivingLicenseNumb = client.getDrivingLicenseNumb();
+    public void textException(Customer customer){
+        String drivingLicenseNumb = customer.getLicenseId();
         if (!isValidDrivingLicense(drivingLicenseNumb)){
             throw new DrivingLicenseDoesntExistException("Le numéro de permis " + drivingLicenseNumb  +" enregistré est un permis de conduire volé. Nous avons contacté la police, agenouillez-vous et tourner le dos à la porte avec les mains derrière la tête. La police est en route. Merci d’utiliser nos services. N’oubliez pas de nous recommander! ");
         }
